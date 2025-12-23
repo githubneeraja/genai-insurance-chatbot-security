@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Insurance Chatbot</title>
+</head>
+<body>
+    <h2>AI Insurance Chatbot</h2>
+
+    <input type="text" id="userInput" placeholder="Type your message">
+    <button onclick="sendMessage()">Send</button>
+
+    <p><strong>You:</strong> <span id="userMsg"></span></p>
+    <p><strong>Bot:</strong> <span id="botMsg"></span></p>
+
+    <script>
+        function sendMessage() {
+            const message = document.getElementById("userInput").value;
+            document.getElementById("userMsg").innerText = message;
+
+            fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: message })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return { response: "This request violates security policies." };
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById("botMsg").innerText = data.response;
+            })
+            .catch(error => {
+                document.getElementById("botMsg").innerText = "Error contacting server.";
+            });
+        }
+    </script>
+</body>
+</html>
